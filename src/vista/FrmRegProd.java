@@ -168,7 +168,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener {
 		nomTipo = leerNombreTipo();
 
 		//validación
-		if (cod ==null || nomTipo == null || cant == -1) {
+		if (cod ==null || nomTipo == null || cant == -1 || prod == null) {
 			return;  //retorna al proceso de ingresar datos nuevamente
 		}else {
 		//mostrar los datos en la tabla
@@ -214,10 +214,22 @@ public class FrmRegProd extends JInternalFrame implements KeyListener {
 	}
 
 	String leerProducto() {
-		//ingresar de 3 a 20 caracteres
 		String prod = null;
 		// validar campo vacio
-		
+		if (txtProducto.getText().trim().length() == 0) {
+			mensajeError("Ingresa nombre d e Producto");
+			txtProducto.setText("");
+			txtProducto.requestFocus();
+		}//ingresarde 3 a 20 caracteres //espacio para paracetamol forte (\\s)
+		else if (txtProducto.getText().trim().matches("[a-zA-Z\\s]{3,20}")){
+			prod = txtProducto.getText().trim();
+			
+		} else {
+			mensajeError("Formato Incorrecto !!");
+			txtProducto.setText("");
+			txtProducto.requestFocus();
+			
+		}
 		return prod;
 	}
 	
