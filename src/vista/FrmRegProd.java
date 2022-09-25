@@ -24,8 +24,10 @@ import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class FrmRegProd extends JInternalFrame implements KeyListener {
+public class FrmRegProd extends JInternalFrame implements KeyListener, MouseListener {
 	private JTextField txtCodigo;
 	private JTextField txtProducto;
 	private JTextField txtCantidad;
@@ -142,6 +144,8 @@ public class FrmRegProd extends JInternalFrame implements KeyListener {
 		getContentPane().add(scrollPane);
 		
 		tblProductos = new JTable();
+		tblProductos.addKeyListener(this);
+		tblProductos.addMouseListener(this);
 		scrollPane.setViewportView(tblProductos);
 		tblProductos.setFillsViewportHeight(true);
 		//Asociar Tabla con el objeto model
@@ -276,6 +280,9 @@ public class FrmRegProd extends JInternalFrame implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 	}
 	public void keyReleased(KeyEvent e) {
+		if (e.getSource() == tblProductos) {
+			keyReleasedTblProductos(e);
+		}
 		if (e.getSource() == txtCantidad) {
 			keyReleasedTxtCantidad(e);
 		}
@@ -284,6 +291,50 @@ public class FrmRegProd extends JInternalFrame implements KeyListener {
 	}
 	protected void keyReleasedTxtCantidad(KeyEvent e) {
 		txtCantidad.setBackground(Color.WHITE);
+	}
+	
+	//Metodo para mostrar datos de la tabla en la caja de texto
+	private void mostrarDatos(int fila) {
+		//Paso 1 : Obtener los datos de la tabla
+		String cod, prod, tipo, pre , cant;
+		cod = tblProductos.getValueAt(fila, 0).toString(); //columna de codigo
+		prod = tblProductos.getValueAt(fila, 1).toString();		
+		tipo = tblProductos.getValueAt(fila, 2).toString();
+		cant = tblProductos.getValueAt(fila, 3).toString();
+		pre = tblProductos.getValueAt(fila, 4).toString();
+	
+		// Paso 2: Mostrar los datos obtenidos en las cajas de texto
+		txtCodigo.setText(cod);
+		txtProducto.setText(prod);
+		cboTipo.setSelectedItem(tipo);
+		txtCantidad.setText(cant);
+		txtPrecio.setText(pre);
+		
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == tblProductos) {
+			mouseClickedTblProductos(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	protected void mouseClickedTblProductos(MouseEvent e) {
+		//obtener el valor de la fila seleccionada
+		int fila = tblProductos.getSelectedRow();
+		//mostrar datos
+		mostrarDatos(fila);
+	}
+	protected void keyReleasedTblProductos(KeyEvent e) { //cambia las filas con las direccionales del keyboard
+		//obtener el valor de la fila seleccionada
+			int fila = tblProductos.getSelectedRow();
+			//mostrar datos
+			mostrarDatos(fila);
 	}
 }
 
