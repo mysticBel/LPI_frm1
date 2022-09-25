@@ -16,6 +16,8 @@ import javax.swing.JTextArea;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 
 public class FrmRegCli extends JFrame {
@@ -25,6 +27,8 @@ public class FrmRegCli extends JFrame {
 	private JTextField txtCorreo;
 	private JTextField txtApellido;
 	private JTextField txtDNI;
+	private JScrollPane scrollPane;
+	private JTable tblClientes;
 	/**
 	 * Launch the application.
 	 */
@@ -45,7 +49,7 @@ public class FrmRegCli extends JFrame {
 	 * Create the frame.
 	 */
 	public FrmRegCli() {
-		setBounds(100, 100, 629, 350);
+		setBounds(100, 100, 629, 401);
 		getContentPane().setLayout(null);
 		
 		JLabel label = new JLabel("C\u00F3digo:");
@@ -125,6 +129,13 @@ public class FrmRegCli extends JFrame {
 		txtDNI.setColumns(10);
 		txtDNI.setBounds(88, 74, 86, 20);
 		getContentPane().add(txtDNI);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(25, 226, 505, 102);
+		getContentPane().add(scrollPane);
+		
+		tblClientes = new JTable();
+		scrollPane.setViewportView(tblClientes);
 	
 	}
 
@@ -134,8 +145,4 @@ public class FrmRegCli extends JFrame {
 		// -- validacion
 		
 	}
-	
-	
-	
-	
 }
