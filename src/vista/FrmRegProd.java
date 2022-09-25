@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import model.Producto;
+import validaciones.Validaciones;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -172,7 +173,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		nomTipo = leerNombreTipo();
 
 		//validación
-		if (cod ==null || nomTipo == null || cant == -1 || prod == null) {
+		if (cod ==null || nomTipo == null || cant == -1 || pre == -1 ||prod == null) {
 			return;  //retorna al proceso de ingresar datos nuevamente
 		}else {
 		//mostrar los datos en la tabla
@@ -199,7 +200,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		if(txtCodigo.getText().trim().length() == 0) {
 			mensajeError("Por favor ingresar el código del producto");
 			/////Formato P0001 o p0001
-		}else if(txtCodigo.getText().trim().matches("[pP]\\d{4}")) {
+		}else if(txtCodigo.getText().trim().matches(Validaciones.COD_PRODUCTO)) {
 			cod = txtCodigo.getText();
 		} else {
 			mensajeError("Formato incorrecto ! Ej : P0001 o p0001");
@@ -225,7 +226,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 			txtProducto.setText("");
 			txtProducto.requestFocus();
 		}//ingresarde 3 a 20 caracteres //espacio para paracetamol forte (\\s)
-		else if (txtProducto.getText().trim().matches("[a-zA-Z\\s]{3,20}")){
+		else if (txtProducto.getText().trim().matches(Validaciones.NOM_PRODUCTO)){
 			prod = txtProducto.getText().trim();
 			
 		} else {
