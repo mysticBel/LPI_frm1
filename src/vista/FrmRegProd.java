@@ -194,9 +194,15 @@ public class FrmRegProd extends JInternalFrame implements KeyListener {
 		// Validar el campo vacio , trim para quitar los espacios
 		if(txtCodigo.getText().trim().length() == 0) {
 			mensajeError("Por favor ingresar el código del producto");
-		}else {
+			/////Formato P0001 o p0001
+		}else if(txtCodigo.getText().trim().matches("[pP]\\d{4}")) {
 			cod = txtCodigo.getText();
+		} else {
+			mensajeError("Formato incorrecto ! Ej : P0001 o p0001");
+			txtCodigo.setText("");
+			txtCodigo.requestFocus();
 		}
+		
 		return cod;
 		
 		//return txtCodigo.getText();
