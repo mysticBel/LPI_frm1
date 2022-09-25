@@ -214,7 +214,11 @@ public class FrmRegProd extends JInternalFrame implements KeyListener {
 	}
 
 	String leerProducto() {
-		return txtProducto.getText();
+		//ingresar de 3 a 20 caracteres
+		String prod = null;
+		// validar campo vacio
+		
+		return prod;
 	}
 	
 	int leerTipo() {
