@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import hilos.HiloTiempo;
+
 import java.awt.Toolkit;
 
 import javax.swing.JLabel;
@@ -29,7 +31,7 @@ public class Logueo extends JFrame {
 	public static Logueo frame;
 	private JButton btnAceptar;
 	private JLabel lblMensaje;
-	private JLabel lblTiempo;
+	public static JLabel lblTiempo;
 	/**
 	 * Launch the application.
 	 */
@@ -110,6 +112,9 @@ public class Logueo extends JFrame {
 	
 	//iniciar conteo
 	private void iniciarConteo() {
-	
+		// llamar al proceso , hacer una instancia
+		HiloTiempo h = new HiloTiempo();
+		//ejecutar el proceso
+		h.start();
 	}
 }

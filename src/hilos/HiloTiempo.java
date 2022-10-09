@@ -1,9 +1,12 @@
 package hilos;
 
+import vista.Logueo;
+
 public class HiloTiempo extends Thread {
   public void run() {
 		for (int i = 0; i <=10; i++) {
-			lblTiempo.setText(i + "s");
+			Logueo.lblTiempo.setText(i + "s");
+			//pausa
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -11,5 +14,8 @@ public class HiloTiempo extends Thread {
 				e.printStackTrace();
 			}
 		}
+		
+		//cerrar la ventana
+		Logueo.frame.dispose();
  }
 }
