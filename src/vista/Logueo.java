@@ -23,7 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class Logueo extends JFrame {
+public class Logueo extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField txtUsuario;
@@ -81,6 +81,7 @@ public class Logueo extends JFrame {
 		contentPane.add(txtClave);
 		
 		btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(this);
 		btnAceptar.setBounds(114, 116, 89, 23);
 		contentPane.add(btnAceptar);
 		
@@ -116,5 +117,17 @@ public class Logueo extends JFrame {
 		HiloTiempo h = new HiloTiempo();
 		//ejecutar el proceso
 		h.start();
+	}
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnAceptar) {
+			actionPerformedBtnAceptar(e);
+		}
+	}
+	protected void actionPerformedBtnAceptar(ActionEvent e) {
+		FrmPrincipal prin = new FrmPrincipal();
+		prin.setVisible(true);
+		prin.setLocationRelativeTo(this);
+		this.dispose();
+		
 	}
 }
