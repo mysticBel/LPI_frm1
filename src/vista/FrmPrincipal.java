@@ -84,6 +84,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		menuBar.add(mnMantenimiento);
 		
 		mntmClientes = new JMenuItem("Clientes");
+		mntmClientes.addActionListener(this);
 		mntmClientes.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/clients.png")));
 		mnMantenimiento.add(mntmClientes);
 		
@@ -112,6 +113,9 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		getContentPane().add(escritorio, BorderLayout.CENTER);
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmClientes) {
+			actionPerformedMntmClientes(e);
+		}
 		if (e.getSource() == mntmVentasReporte) {
 			actionPerformedMntmVentasReporte(e);
 		}
@@ -126,6 +130,13 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		//Para cerrar principal
 		System.exit(0);
 	}
+	
+	protected void actionPerformedMntmClientes(ActionEvent e) {
+		FrmRegCli cli =new FrmRegCli();
+		cli.setVisible(true);
+		escritorio.add(cli);
+	}
+	
 	protected void actionPerformedMntmProductos(ActionEvent e) {
 		FrmRegProd prod =new FrmRegProd();
 		prod.setVisible(true);
@@ -136,4 +147,5 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		ven.setVisible(true);
 		escritorio.add(ven);
 	}
+	
 }

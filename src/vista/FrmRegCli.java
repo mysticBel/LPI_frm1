@@ -11,6 +11,7 @@ import model.Producto;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.Font;
@@ -20,7 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
-public class FrmRegCli extends JFrame {
+public class FrmRegCli extends JInternalFrame {
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
 	private JTextField txtTelefono;
@@ -49,6 +50,9 @@ public class FrmRegCli extends JFrame {
 	 * Create the frame.
 	 */
 	public FrmRegCli() {
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
 		setBounds(100, 100, 629, 401);
 		getContentPane().setLayout(null);
 		
