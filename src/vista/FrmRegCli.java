@@ -6,6 +6,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import model.Producto;
 
@@ -30,6 +31,10 @@ public class FrmRegCli extends JInternalFrame {
 	private JTextField txtDNI;
 	private JScrollPane scrollPane;
 	private JTable tblClientes;
+	// Instanciar un objeto para el modelamiento de la tabla tblProductos y agregar columans
+		DefaultTableModel model = new DefaultTableModel();
+		
+	
 	/**
 	 * Launch the application.
 	 */
@@ -53,7 +58,7 @@ public class FrmRegCli extends JInternalFrame {
 		setMaximizable(true);
 		setIconifiable(true);
 		setClosable(true);
-		setBounds(100, 100, 629, 401);
+		setBounds(100, 100, 564, 408);
 		getContentPane().setLayout(null);
 		
 		JLabel label = new JLabel("C\u00F3digo:");
@@ -101,7 +106,7 @@ public class FrmRegCli extends JInternalFrame {
 		getContentPane().add(txtCorreo);
 		
 		JButton btnNuevo = new JButton("Nuevo");
-		btnNuevo.setBounds(474, 28, 116, 34);
+		btnNuevo.setBounds(385, 24, 116, 34);
 		getContentPane().add(btnNuevo);
 		
 		JButton btnGuardar = new JButton("Guardar");		
@@ -110,7 +115,7 @@ public class FrmRegCli extends JInternalFrame {
 				ingresar();
 			}
 		});
-		btnGuardar.setBounds(474, 73, 116, 34);
+		btnGuardar.setBounds(385, 70, 116, 34);
 		getContentPane().add(btnGuardar);
 		
 		JLabel lblMantenimientoDeProductos = new JLabel("Mantenimiento de Clientes");
@@ -135,18 +140,72 @@ public class FrmRegCli extends JInternalFrame {
 		getContentPane().add(txtDNI);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(25, 226, 505, 102);
+		scrollPane.setBounds(25, 226, 491, 127);
 		getContentPane().add(scrollPane);
 		
 		tblClientes = new JTable();
+		tblClientes.setFillsViewportHeight(true);
 		scrollPane.setViewportView(tblClientes);
+		
+		//Asociar Tabla con el objeto model
+				tblClientes.setModel(model);
+				//columnas
+				model.addColumn("Código");
+				model.addColumn("DNI");
+				model.addColumn("Nombre");
+				model.addColumn("Apellido");
+				model.addColumn("Telefono");
+				model.addColumn("Correo");
+		
 	
 	}
 
 	
 	void ingresar(){
 		
+		//1. Declaramos las variables
+		String cod, nomb, ape, telf, correo, dni;
+		//entrada de datos:
+		cod = getCodigo();
+		nomb = getNombre();
+		ape = getApellido();
+		telf = getTelefono();
+		correo = getCorreo();
+		dni = getDni();
+		
+		
 		// -- validacion
 		
+	}
+
+
+	private String getCodigo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private String getNombre() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getApellido() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getTelefono() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getCorreo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getDni() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
