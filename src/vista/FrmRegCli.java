@@ -37,6 +37,7 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 	// Instanciar un objeto para el modelamiento de la tabla tblProductos y agregar columans
 		DefaultTableModel model = new DefaultTableModel();
 		private JLabel lblError;
+		private JLabel lblHora;
 		
 	
 	/**
@@ -168,6 +169,10 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 		lblError.setVisible(false);
 		lblError.setBounds(180, 45, 46, 14);
 		getContentPane().add(lblError);
+		
+		lblHora = new JLabel("hh:mm:ss");
+		lblHora.setBounds(409, 154, 46, 14);
+		getContentPane().add(lblHora);
 	
 	}
 
