@@ -6,6 +6,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import hilos.HiloReloj;
+import hilos.HiloTiempo;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -14,11 +18,16 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.event.InputEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JDesktopPane;
 import java.awt.SystemColor;
+import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.Font;
 
 public class FrmPrincipal extends JFrame implements ActionListener {
 	private JMenuBar menuBar;
@@ -31,6 +40,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 	private JMenuItem mntmClientes;
 	private JMenuItem mntmProductos;
 	private JDesktopPane escritorio;
+	public static JLabel lblHora;
 
 	/**
 	 * Launch the application.
@@ -111,6 +121,16 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		escritorio = new JDesktopPane();
 		escritorio.setBackground(SystemColor.activeCaption);
 		getContentPane().add(escritorio, BorderLayout.CENTER);
+		
+		lblHora = new JLabel("hh:mm:ss");
+		lblHora.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblHora.setForeground(Color.WHITE);
+		lblHora.setBounds(37, 38, 94, 37);
+		escritorio.add(lblHora);
+		
+		//lamando al metodo
+		mostrarHora();
+		
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmClientes) {
@@ -148,4 +168,9 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		escritorio.add(ven);
 	}
 	
+	//mostrar Hora
+	private void mostrarHora() {
+		HiloReloj h = new HiloReloj();
+				h.start();
+	}
 }

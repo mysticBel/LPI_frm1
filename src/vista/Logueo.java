@@ -124,9 +124,9 @@ public class Logueo extends JFrame implements ActionListener {
 		}
 	}
 	protected void actionPerformedBtnAceptar(ActionEvent e) {
-		FrmPrincipal prin = new FrmPrincipal();
-		prin.setVisible(true);
-		prin.setLocationRelativeTo(this);
+		FrmPreLoader pre = new FrmPreLoader();
+		pre.setVisible(true);
+		pre.setLocationRelativeTo(this);
 		this.dispose();
 		
 	}
