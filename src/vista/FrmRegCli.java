@@ -20,9 +20,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 
-public class FrmRegCli extends JInternalFrame {
+public class FrmRegCli extends JInternalFrame implements KeyListener {
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
 	private JTextField txtTelefono;
@@ -33,6 +36,7 @@ public class FrmRegCli extends JInternalFrame {
 	private JTable tblClientes;
 	// Instanciar un objeto para el modelamiento de la tabla tblProductos y agregar columans
 		DefaultTableModel model = new DefaultTableModel();
+		private JLabel lblError;
 		
 	
 	/**
@@ -66,6 +70,7 @@ public class FrmRegCli extends JInternalFrame {
 		getContentPane().add(label);
 		
 		txtCodigo = new JTextField();
+		txtCodigo.addKeyListener(this);
 		txtCodigo.setText("");
 		txtCodigo.setColumns(10);
 		txtCodigo.setBounds(88, 42, 86, 20);
@@ -148,15 +153,21 @@ public class FrmRegCli extends JInternalFrame {
 		scrollPane.setViewportView(tblClientes);
 		
 		//Asociar Tabla con el objeto model
-				tblClientes.setModel(model);
-				//columnas
+				tblClientes.setModel(model);	
+		//columnas
 				model.addColumn("Código");
 				model.addColumn("DNI");
 				model.addColumn("Nombre");
 				model.addColumn("Apellido");
 				model.addColumn("Telefono");
 				model.addColumn("Correo");
-		
+				
+		lblError = new JLabel("*");
+		lblError.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblError.setForeground(Color.RED);
+		lblError.setVisible(false);
+		lblError.setBounds(180, 45, 46, 14);
+		getContentPane().add(lblError);
 	
 	}
 
@@ -180,10 +191,23 @@ public class FrmRegCli extends JInternalFrame {
 
 
 	private String getCodigo() {
-		// TODO Auto-generated method stub
-		return null;
+		// 2. Formato CL001 - cl001
+		String cod = null;
+		///campo vacio -validacion
+		if ( txtCodigo.getText().trim().length() == 0) {
+			mensajeError("Por favor, ingresar el código del cliente");
+			txtCodigo.setText("");
+			txtCodigo.requestFocus();
+			lblError.setVisible(true); // 2.a. para que aparezca el arterisco 
+		} 
+		return cod;
 	}
 	
+	private void mensajeError(String msj) {
+		JOptionPane.showMessageDialog(this, msj, "Error !!!", 0);
+		
+	}
+
 	private String getNombre() {
 		// TODO Auto-generated method stub
 		return null;
@@ -207,5 +231,17 @@ public class FrmRegCli extends JInternalFrame {
 	private String getDni() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+		if (e.getSource() == txtCodigo) {
+			keyReleasedTxtCodigo(e);
+		}
+	}
+	public void keyTyped(KeyEvent e) {
+	}
+	protected void keyReleasedTxtCodigo(KeyEvent e) {
+		lblError.setVisible(false);
 	}
 }

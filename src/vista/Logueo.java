@@ -28,6 +28,8 @@ public class Logueo extends JFrame {
 	private JPasswordField txtClave;
 	public static Logueo frame;
 	private JButton btnAceptar;
+	private JLabel lblMensaje;
+	private JLabel lblTiempo;
 	/**
 	 * Launch the application.
 	 */
@@ -79,7 +81,6 @@ public class Logueo extends JFrame {
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setBounds(114, 116, 89, 23);
 		contentPane.add(btnAceptar);
-		btnAceptar.setEnabled(false);
 		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.addActionListener(new ActionListener() {
@@ -94,6 +95,21 @@ public class Logueo extends JFrame {
 		lblFondo.setIcon(new ImageIcon(Logueo.class.getResource("/img/avatar.png")));
 		lblFondo.setBounds(0, 11, 127, 184);
 		contentPane.add(lblFondo);
+		
+		lblMensaje = new JLabel("Esta ventana se cerrar\u00E1 en");
+		lblMensaje.setBounds(77, 11, 154, 14);
+		contentPane.add(lblMensaje);
+		
+		lblTiempo = new JLabel("0 s");
+		lblTiempo.setBounds(237, 11, 46, 14);
+		contentPane.add(lblTiempo);
+		
+		//Llamar al conteo
+		iniciarConteo();
 	}
 	
+	//iniciar conteo
+	private void iniciarConteo() {
+	
+	}
 }
