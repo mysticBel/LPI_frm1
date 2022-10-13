@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import model.Producto;
+import validaciones.Validaciones;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -38,6 +39,11 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 		DefaultTableModel model = new DefaultTableModel();
 		private JLabel lblError;
 		private JLabel lblHora;
+		private JLabel lblErrorNombre;
+		private JLabel lblErrorDni;
+		private JLabel lblErrorApe;
+		private JLabel lblErrorTelef;
+		private JLabel lblErrorCorreo;
 		
 	
 	/**
@@ -167,12 +173,47 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 		lblError.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblError.setForeground(Color.RED);
 		lblError.setVisible(false);
-		lblError.setBounds(180, 45, 46, 14);
+		lblError.setBounds(183, 47, 46, 14);
 		getContentPane().add(lblError);
 		
 		lblHora = new JLabel("hh:mm:ss");
 		lblHora.setBounds(409, 154, 46, 14);
 		getContentPane().add(lblHora);
+		
+		lblErrorNombre = new JLabel("*");
+		lblErrorNombre.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblErrorNombre.setForeground(Color.RED);
+		lblErrorNombre.setBounds(363, 105, 46, 14);
+		lblErrorNombre.setVisible(false);
+		getContentPane().add(lblErrorNombre);
+		
+		lblErrorDni = new JLabel("*");
+		lblErrorDni.setForeground(Color.RED);
+		lblErrorDni.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblErrorDni.setBounds(184, 80, 46, 14);
+		lblErrorDni.setVisible(false);
+		getContentPane().add(lblErrorDni);
+		
+		lblErrorApe = new JLabel("*");
+		lblErrorApe.setForeground(Color.RED);
+		lblErrorApe.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblErrorApe.setBounds(363, 130, 46, 14);
+		lblErrorApe.setVisible(false);
+		getContentPane().add(lblErrorApe);
+		
+		lblErrorTelef = new JLabel("*");
+		lblErrorTelef.setForeground(Color.RED);
+		lblErrorTelef.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblErrorTelef.setBounds(183, 154, 46, 14);
+		lblErrorTelef.setVisible(false);
+		getContentPane().add(lblErrorTelef);
+		
+		lblErrorCorreo = new JLabel("*");
+		lblErrorCorreo.setForeground(Color.RED);
+		lblErrorCorreo.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblErrorCorreo.setBounds(363, 179, 46, 14);
+		lblErrorCorreo.setVisible(false);
+		getContentPane().add(lblErrorCorreo);
 	
 	}
 
@@ -191,6 +232,18 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 		
 		
 		// -- validacion
+		if (cod ==null || dni ==null  ) {
+			return; //se cancela el guardar datos
+		} else {
+			Object fila[] = {   cod,
+								dni,
+								nomb,
+								ape,
+								telf,
+								correo
+							};
+			model.addRow(fila); //aparece en la tabla los datos
+		}
 		
 	}
 
@@ -204,7 +257,15 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 			txtCodigo.setText("");
 			txtCodigo.requestFocus();
 			lblError.setVisible(true); // 2.a. para que aparezca el arterisco 
-		} 
+		} //Formato CL001 - cl001
+		else if (txtCodigo.getText().trim().matches(Validaciones.COD_CLIENTE )) {
+			cod = txtCodigo.getText().trim();
+		}else {
+			mensajeError("Formato invalido! , Ejem CL001 o cl001");
+			txtCodigo.setText("");
+			txtCodigo.requestFocus();
+			lblError.setVisible(true);  //para que aparezca el arterisco 
+		}
 		return cod;
 	}
 	
@@ -234,8 +295,23 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 	}
 
 	private String getDni() {
-		// TODO Auto-generated method stub
-		return null;
+		String dni =null;
+		///campo vacio -validacion
+				if ( txtDNI.getText().trim().length() == 0) {
+					mensajeError("Por favor, ingresar el dni del cliente");
+					txtDNI.setText("");
+					txtDNI.requestFocus();
+					lblError.setVisible(true); // 2.a. para que aparezca el arterisco 
+				} //Formato CL001 - cl001
+				else if (txtDNI.getText().trim().matches(Validaciones.DNI_CLIENTE )) {
+					dni = txtDNI.getText().trim();
+				}else {
+					mensajeError("Formato invalido! ,digite 8 números");
+					txtDNI.setText("");
+					txtDNI.requestFocus();
+					lblError.setVisible(true);  //para que aparezca el arterisco 
+				}
+		return dni;
 	}
 	public void keyPressed(KeyEvent e) {
 	}

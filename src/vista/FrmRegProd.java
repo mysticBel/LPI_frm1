@@ -312,7 +312,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		txtPrecio.setText(pre);
 		
 	}
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) { 
 		if (e.getSource() == tblProductos) {
 			mouseClickedTblProductos(e);
 		}
