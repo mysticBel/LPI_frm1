@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import hilos.HiloReloj;
 import model.Producto;
 import validaciones.Validaciones;
 
@@ -38,7 +39,7 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 	// Instanciar un objeto para el modelamiento de la tabla tblProductos y agregar columans
 		DefaultTableModel model = new DefaultTableModel();
 		private JLabel lblError;
-		private JLabel lblHora;
+		private JLabel lblRelojCli;
 		private JLabel lblErrorNombre;
 		private JLabel lblErrorDni;
 		private JLabel lblErrorApe;
@@ -176,9 +177,9 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 		lblError.setBounds(183, 47, 46, 14);
 		getContentPane().add(lblError);
 		
-		lblHora = new JLabel("hh:mm:ss");
-		lblHora.setBounds(409, 154, 46, 14);
-		getContentPane().add(lblHora);
+		lblRelojCli = new JLabel("hh:mm:ss");
+		lblRelojCli.setBounds(409, 154, 92, 14);
+		getContentPane().add(lblRelojCli);
 		
 		lblErrorNombre = new JLabel("*");
 		lblErrorNombre.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -215,9 +216,19 @@ public class FrmRegCli extends JInternalFrame implements KeyListener {
 		lblErrorCorreo.setVisible(false);
 		getContentPane().add(lblErrorCorreo);
 	
+		//reloj sincronizado
+		mostrarHora();
 	}
 
 	
+	
+	
+	private void mostrarHora() {
+		HiloReloj h = new HiloReloj(lblRelojCli);
+		h.start();
+		
+	}
+
 	void ingresar(){
 		
 		//1. Declaramos las variables

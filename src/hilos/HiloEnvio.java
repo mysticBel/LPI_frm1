@@ -2,6 +2,7 @@ package hilos;
 
 import vista.Editor;
 
+
 public class HiloEnvio extends Thread {
  public void run () {
 	 //proceso que imprima del 1 al 10

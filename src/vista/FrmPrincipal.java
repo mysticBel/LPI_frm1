@@ -170,7 +170,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 	
 	//mostrar Hora
 	private void mostrarHora() {
-		HiloReloj h = new HiloReloj();
+		HiloReloj h = new HiloReloj(lblHora);
 				h.start();
 	}
 }

@@ -3,6 +3,7 @@ package hilos;
 import vista.Logueo;
 
 public class HiloTiempo extends Thread {
+	@Override
   public void run() {
 		for (int i = 0; i <=10; i++) {
 			Logueo.lblTiempo.setText(i + "s");
