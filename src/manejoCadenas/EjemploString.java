@@ -31,6 +31,11 @@ public class EjemploString {
 		// Validar que el curso sea LP1
 		System.out.println( sextoElem.equals("LP1")); //true
 		
+		if(sextoElem.equals("LP1")) {
+			System.out.println( "Curso correcto");
+		}else {
+			System.out.println( "Curso incorrecto");
+		}
 		
 		// validar que el tamaño del código sea 4
 		System.out.println( primerElem.length() == 4 ); //true
@@ -42,8 +47,10 @@ public class EjemploString {
 		// Generar un correo con el siguiente formato: 
 		//1° letra del nombre + parte numérica del código + @cibertec.pe. Ej.  j001@cibertec.pe
 		
+		char primerComponente = segundoElem.charAt(0);
+		String segundoComponente =primerElem.substring(1,4);
 		
-		System.out.println( segundoElem.charAt(0) + primerElem.substring(1,4) + "@cibertec.pe");
+		System.out.println( primerComponente + segundoComponente + "@cibertec.pe");
 	}
 
 }
