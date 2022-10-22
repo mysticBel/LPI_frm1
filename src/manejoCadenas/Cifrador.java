@@ -46,7 +46,39 @@ public class Cifrador {
 		System.out.println("Texto encriptado : " + encriptado);  // utonub utxit na si utsi udnam eluH
 		
 		//tareita --> texto encriptado debe regresar al texto original
+		//System.out.println("Texto encriptado-reverse : " + encriptado.reverse());
 		
+		StringBuilder desencriptado = new StringBuilder();
+	
+		desencriptado.append(encriptado);
+		
+		
+		for (int i = 0; i < desencriptado.length(); i++) {
+			switch (desencriptado.charAt(i)){ 
+			case 'e':
+				desencriptado.setCharAt(i, 'a');
+				break;
+			case 'i':
+				desencriptado.setCharAt(i, 'e');
+				break;
+			case 'o':
+				desencriptado.setCharAt(i, 'i');
+				break;
+			case 'u':
+				desencriptado.setCharAt(i, 'o');
+				break;
+			case 'a':
+				desencriptado.setCharAt(i, 'u');
+				break;
+			
+			}
+		}
+		
+		//SAlida
+				System.out.println(">>>>>>>>>>>>>>>>>DesEncriptador<<<<<<<<<<<<<<<");
+				System.out.println("Texto encriptado : " + encriptado);
+				System.out.println("Texto desencriptado: " + desencriptado);
+				System.out.println("Texto desencriptado-original : " + desencriptado.reverse());
 	}
 
 }
