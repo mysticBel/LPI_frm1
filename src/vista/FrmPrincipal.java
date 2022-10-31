@@ -41,6 +41,8 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 	private JMenuItem mntmProductos;
 	private JDesktopPane escritorio;
 	public static JLabel lblHora;
+	private JMenu mnRegistro;
+	private JMenuItem mntmUsuarios;
 
 	/**
 	 * Launch the application.
@@ -103,6 +105,13 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		mntmProductos.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/products.png")));
 		mnMantenimiento.add(mntmProductos);
 		
+		mnRegistro = new JMenu("Registro");
+		menuBar.add(mnRegistro);
+		
+		mntmUsuarios = new JMenuItem("Usuarios");
+		mntmUsuarios.addActionListener(this);
+		mnRegistro.add(mntmUsuarios);
+		
 		mnReportes = new JMenu("Reportes");
 		mnReportes.setMnemonic('R');
 		mnReportes.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/print.png")));
@@ -133,6 +142,9 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 		
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmUsuarios) {
+			actionPerformedMntmUsuarios(e);
+		}
 		if (e.getSource() == mntmClientes) {
 			actionPerformedMntmClientes(e);
 		}
@@ -172,5 +184,10 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 	private void mostrarHora() {
 		HiloReloj h = new HiloReloj(lblHora);
 				h.start();
+	}
+	protected void actionPerformedMntmUsuarios(ActionEvent e) {
+		FrmRegistro regUser =new FrmRegistro();
+		regUser.setVisible(true);
+		escritorio.add(regUser);
 	}
 }
