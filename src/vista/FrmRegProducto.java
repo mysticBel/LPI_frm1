@@ -9,7 +9,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import model.Producto;
+import entidad.Usuario;
+import mantenimiento.GestionProductoDAO;
+import mantenimiento.GestionTipoCategoriaDAO;
+import mantenimiento.GestionUsuarioDAO;
+import entidad.Producto;
+import entidad.TipoCategoria;
+import utils.Alertas;
 import validaciones.Validaciones;
 
 import javax.swing.JComboBox;
@@ -26,24 +32,32 @@ import javax.swing.ImageIcon;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import java.awt.SystemColor;
 
-public class FrmRegProd extends JInternalFrame implements KeyListener, MouseListener, ActionListener {
+public class FrmRegProducto extends JInternalFrame implements KeyListener, MouseListener, ActionListener {
 	private JTextField txtCodigo;
 	private JTextField txtProducto;
 	private JTextField txtCantidad;
 	private JTextField txtPrecio;
 	private JComboBox cboTipo;
 	private JTable tblProductos;
-	// Instanciar un objeto para el modelamiento de la tabla tblProductos y agregar columans
-	DefaultTableModel model = new DefaultTableModel();
 	private JPanel panel;
 	private JButton btnEliminar;
 	private JButton btnBuscar;
 	private JButton btnNuevo;
 	
+	
+	//instanciamos
+			GestionProductoDAO gProd = new GestionProductoDAO();
+			GestionTipoCategoriaDAO gTip = new GestionTipoCategoriaDAO();
+	// Instanciar un objeto para el modelamiento de la tabla tblProductos y agregar columans
+			DefaultTableModel model = new DefaultTableModel();
+			private JLabel lblEstado;
+			private JTextField txtEstado;
+			private JButton btnActualizar;
 
 	/**
 	 * Launch the application.
@@ -52,7 +66,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FrmRegProd frame = new FrmRegProd();
+					FrmRegProducto frame = new FrmRegProducto();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,7 +78,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 	/**
 	 * Create the frame.
 	 */
-	public FrmRegProd() {
+	public FrmRegProducto() {
 		getContentPane().setBackground(SystemColor.inactiveCaptionBorder);
 		setTitle("Mantenimiento de Productos");
 		setClosable(true);
@@ -99,7 +113,6 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 
 		cboTipo = new JComboBox();
 		cboTipo.setBounds(617, 130, 123, 20);
-		cboTipo.setModel(new DefaultComboBoxModel(new String[] { "Seleccione tipo", "Pastillas", "Jarabe", "Otros" }));
 		getContentPane().add(cboTipo);
 
 		JLabel label_3 = new JLabel("Cantidad:");
@@ -125,12 +138,12 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 
 		btnNuevo = new JButton("Nuevo");
 		btnNuevo.addActionListener(this);
-		btnNuevo.setIcon(new ImageIcon(FrmRegProd.class.getResource("/img/nuevo.png")));
+		btnNuevo.setIcon(new ImageIcon(FrmRegProducto.class.getResource("/img/nuevo.png")));
 		btnNuevo.setBounds(86, 307, 116, 34);
 		getContentPane().add(btnNuevo);
 
 		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setIcon(new ImageIcon(FrmRegProd.class.getResource("/img/abrir.png")));
+		btnGuardar.setIcon(new ImageIcon(FrmRegProducto.class.getResource("/img/abrir.png")));
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ingresar();
@@ -139,7 +152,8 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		btnGuardar.setBounds(223, 307, 116, 34);
 		getContentPane().add(btnGuardar);
 
-		JButton btnActualizar = new JButton("Actualizar");
+		btnActualizar = new JButton("Actualizar");
+		btnActualizar.addActionListener(this);
 		btnActualizar.setBounds(349, 307, 116, 34);
 		getContentPane().add(btnActualizar);
 		
@@ -166,26 +180,70 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 				lblMantenimientoDeProductos.setFont(new Font("Tahoma", Font.BOLD, 17));
 				
 				btnEliminar = new JButton("Eliminar");
+				btnEliminar.addActionListener(this);
 				btnEliminar.setBounds(479, 307, 116, 34);
 				getContentPane().add(btnEliminar);
 				
 				btnBuscar = new JButton("");
-				btnBuscar.setIcon(new ImageIcon(FrmRegProd.class.getResource("/img/busca.png")));
+				btnBuscar.setIcon(new ImageIcon(FrmRegProducto.class.getResource("/img/busca.png")));
 				btnBuscar.setBounds(702, 46, 31, 41);
 				getContentPane().add(btnBuscar);
 		//columnas
 		model.addColumn("Código");
 		model.addColumn("Producto");
-		model.addColumn("Tipo");
 		model.addColumn("Cantidad");
 		model.addColumn("Precio");
+		model.addColumn("Tipo");
+		model.addColumn("Estado");
+		//Asociar table con objeto model
+		tblProductos.setModel(model);
+		
+		lblEstado = new JLabel("Estado:");
+		lblEstado.setBounds(542, 227, 46, 14);
+		getContentPane().add(lblEstado);
+		
+		txtEstado = new JTextField();
+		txtEstado.setText("");
+		txtEstado.setColumns(10);
+		txtEstado.setBounds(617, 223, 123, 20);
+		getContentPane().add(txtEstado);
+		//Cargar data a la tabla
+		cargarDataProducto();
+		//Mostrar data de la tabla a las cajas de texto
+		//mostrarDatos(0);
+		
+		// cargar data desde la bd a el cbobox
+				cargarDataCombobox();
 	}
+	
+	/*
+
+	private void cargarDataProducto() {
+		// TODO Auto-generated method stub
+		//PASO 1 : Limpiar la tabla
+				model.setRowCount(0);
+				//PASO 2 : Obtener el resultado
+				ArrayList<Producto> list = gProd.listarProductos();
+				//PASO 3 : bucle para el recorrido
+				for( Producto p : list) {
+					Object fila [] = {p.getIdProducto(),
+									  p.getDescripcion(),
+									  p.getStock(),
+									  p.getPrecio(),
+									  p.getIdCategoria(),
+									  p.getEstado()
+									};
+					//añadir fila a la tabla
+					model.addRow(fila);
+				}		
+	}
+	*/
 
 	void ingresar() {
 		String cod, prod, nomTipo;
 		int cant;
 		double pre;
-		int tipo;
+		int tipo, estado;
 
 		cod  = leerCodigo();
 		prod = leerProducto();
@@ -193,23 +251,46 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		pre  = leerPrecio();
 		tipo = leerTipo();
 		nomTipo = leerNombreTipo();
+		estado = leerEstado();
 
 		//validación
 		if (cod ==null || nomTipo == null || cant == -1 || pre == -1 ||prod == null) {
 			return;  //retorna al proceso de ingresar datos nuevamente
 		}else {
-		//mostrar los datos en la tabla
-		//mostrar un arreglo para almacenar la informacion ingresada
-		Object fila[] = {cod, prod, nomTipo, cant, pre};
-		//enviar el arreglo al objeto model
-		model.addRow(fila);
+			//Paso 1 : Crear un objeto de la clase Producto - instanciamos de la clase Producto
+			Producto p = new Producto();
+			//Paso 2: setear --> asignar los valores obtenidos desde la GUI a los atributos privados
+			p.setIdProducto(cod);
+			p.setDescripcion(prod);
+			p.setStock(cant);
+			p.setPrecio(pre);
+			p.setIdCategoria(tipo);
+			p.setEstado(estado);
+			//Paso 3 : Llamar al proceso de registro - gestionProductoDAO, lo hemos instanciado en el constructor
+			int res = gProd.registrarProducto(p);
+			//Validar el resultado del proceso de registro
+			if(res == 0) {
+				Alertas.mensajeError(":( Hubo un error en el registro");
+			}else {
+				Alertas.mensajeExitoso("Usuario registrado con éxito !");
+				cargarDataProducto(); //cargar datos a la tabla
+			}
+		
 		}
 
 	}
 
+
+
+	private int leerEstado() {
+		int estado =-1;
+		estado = Integer.parseInt(txtEstado.getText());
+		return estado;
+	}
+
 	private String leerNombreTipo() {
 		if(leerTipo() == 0) {
-			mensajeError("Por favor selecciona una opcion valida");
+			Alertas.mensajeError("Por favor selecciona una opcion valida");
 		}else {
 			return cboTipo.getSelectedItem().toString();
 		}
@@ -220,12 +301,12 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		String cod = null;
 		// Validar el campo vacio , trim para quitar los espacios
 		if(txtCodigo.getText().trim().length() == 0) {
-			mensajeError("Por favor ingresar el código del producto");
+			Alertas.mensajeError("Por favor ingresar el código del producto");
 			/////Formato P0001 o p0001
 		}else if(txtCodigo.getText().trim().matches(Validaciones.COD_PRODUCTO)) {
 			cod = txtCodigo.getText();
 		} else {
-			mensajeError("Formato incorrecto ! Ej : P0001 o p0001");
+			Alertas.mensajeError("Formato incorrecto ! Ej : P0001 o p0001");
 			txtCodigo.setText("");
 			txtCodigo.requestFocus();
 		}
@@ -235,16 +316,12 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		//return txtCodigo.getText();
 	}
 
-	private void mensajeError(String msj) {
-		JOptionPane.showMessageDialog(this,msj,"Error!!!",0);
-		
-	}
 
 	String leerProducto() {
 		String prod = null;
 		// validar campo vacio
 		if (txtProducto.getText().trim().length() == 0) {
-			mensajeError("Ingresa nombre d e Producto");
+			Alertas.mensajeError("Ingresa nombre d e Producto");
 			txtProducto.setText("");
 			txtProducto.requestFocus();
 		}//ingresarde 3 a 20 caracteres //espacio para paracetamol forte (\\s)
@@ -252,7 +329,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 			prod = txtProducto.getText().trim();
 			
 		} else {
-			mensajeError("Formato Incorrecto !!");
+			Alertas.mensajeError("Formato Incorrecto !!");
 			txtProducto.setText("");
 			txtProducto.requestFocus();
 			
@@ -271,7 +348,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		int cant = -1;
 		//si hay campo vacio en el form
 		if(txtCantidad.getText().trim().length()== 0) {
-			mensajeError("Ingresar la cantidad del producto");
+			Alertas.mensajeError("Ingresar la cantidad del producto");
 			txtCantidad.setText("");
 			txtCantidad.requestFocus();
 		}
@@ -280,7 +357,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 			try {
 				cant = Integer.parseInt(txtCantidad.getText());
 				if (cant <=0) {
-					mensajeError("Ingresar valores mayores a 0");
+					Alertas.mensajeError("Ingresar valores mayores a 0");
 					txtCantidad.setText("");
 					txtCantidad.requestFocus();
 					cant = -1; //se ejecuta linea 167
@@ -288,7 +365,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 				}
 			} catch (NumberFormatException e) {
 				// si escribe algo que no es nro
-				mensajeError("Ingresar valores enteros");
+				Alertas.mensajeError("Ingresar valores enteros");
 				txtCantidad.setBackground(Color.RED);
 				txtCantidad.setText("");
 				txtCantidad.requestFocus();
@@ -319,6 +396,23 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 	//Metodo para mostrar datos de la tabla en la caja de texto
 	private void mostrarDatos(int fila) {
 		//Paso 1 : Obtener los datos de la tabla
+		String cod, prod, cant, pre ,tipo, estado;
+		cod = tblProductos.getValueAt(fila, 0).toString(); //columna de codigo
+		prod = tblProductos.getValueAt(fila, 1).toString();		
+		cant = tblProductos.getValueAt(fila, 2).toString();
+		pre = tblProductos.getValueAt(fila, 3).toString();
+		tipo = tblProductos.getValueAt(fila, 4).toString();
+		estado = tblProductos.getValueAt(fila, 5).toString();
+	
+		// Paso 2: Mostrar los datos obtenidos en las cajas de texto
+		txtCodigo.setText(cod);
+		txtProducto.setText(prod);
+		txtCantidad.setText(cant);
+		txtPrecio.setText(pre); 
+		cboTipo.setSelectedItem(tipo);
+		txtEstado.setText(pre); 
+		
+		/* //Paso 1 : Obtener los datos de la tabla
 		String cod, prod, tipo, pre , cant;
 		cod = tblProductos.getValueAt(fila, 0).toString(); //columna de codigo
 		prod = tblProductos.getValueAt(fila, 1).toString();		
@@ -331,7 +425,7 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		txtProducto.setText(prod);
 		cboTipo.setSelectedItem(tipo);
 		txtCantidad.setText(cant);
-		txtPrecio.setText(pre);
+		txtPrecio.setText(pre); */
 		
 	}
 	public void mouseClicked(MouseEvent e) { 
@@ -360,6 +454,12 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 			mostrarDatos(fila);
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			actionPerformedBtnEliminar(e);
+		}
+		if (e.getSource() == btnActualizar) {
+			actionPerformedBtnActualizar(e);
+		}
 		if (e.getSource() == btnNuevo) {
 			actionPerformedBtnNuevo(e);
 		}
@@ -371,6 +471,121 @@ public class FrmRegProd extends JInternalFrame implements KeyListener, MouseList
 		txtCantidad.setText("");
 		txtPrecio.setText("");
 		txtCodigo.requestFocus();
+	}
+	protected void actionPerformedBtnActualizar(ActionEvent e) {
+		actualizarProducto();
+	}
+
+	private void actualizarProducto() {
+		
+		String cod, prod, nomTipo;
+		int cant;
+		double pre;
+		int tipo, estado;
+	
+		// ENTRADAS
+		cod  = leerCodigo();
+		prod = leerProducto();
+		cant = leerCantidad();
+		pre  = leerPrecio();
+		tipo = leerTipo();
+		nomTipo = leerNombreTipo();
+		estado = leerEstado();
+		
+		// VALIDAR
+		if(cod ==null || nomTipo == null || cant == -1 || pre == -1 ||prod == null) {
+			return; // no se ejecuta
+		} else {
+			
+			//Paso 1 : Crear un objeto de la clase Producto - instanciamos de la clase Producto
+			Producto p = new Producto();
+			//Paso 2: setear --> asignar los valores obtenidos desde la GUI a los atributos privados
+			p.setIdProducto(cod);
+			p.setDescripcion(prod);
+			p.setStock(cant);
+			p.setPrecio(pre);
+			p.setIdCategoria(tipo);
+			p.setEstado(estado);
+			//Paso 3 : Llamar al proceso de registro - gestionProductoDAO, lo hemos instanciado en el constructor
+			int res = gProd.actualizarProducto(p);
+			//Validar el resultado del proceso de registro
+			if(res == 0) {
+				Alertas.mensajeError(":( Hubo un error en la actualización");
+			}else {
+				Alertas.mensajeExitoso("Producto ACTUALIZADO con éxito !");
+			    cargarDataProducto(); //cargar datos a la tabla
+			}
+	
+						
+		}
+		
+	}
+	protected void actionPerformedBtnEliminar(ActionEvent e) {
+		eliminarProducto();
+	}
+
+	private void eliminarProducto() {
+		String cod; 
+		int opcion;
+		// 1. Obtener el codigo ingresado
+			cod = leerCodigo();
+			//validacion
+			if(cod == null) {
+				return;
+			}else {
+				// Mensaje de Confirmacion
+				opcion = JOptionPane.showConfirmDialog(this, "Seguro de eliminar ?", "Sistema", JOptionPane.YES_NO_OPTION);
+				if(opcion == 0) { // SI
+					//Ejecutar el proceso de tipo int
+					int ok = gProd.eliminarProducto(cod);
+					// Validar el resultado del proceso
+					if(ok == 0) {
+						Alertas.mensajeError("Codigo de Producto no existe");
+					}else {
+						Alertas.mensajeExitoso("Producto ELIMINADO");
+						cargarDataProducto();
+					}
+				}
+			}
+	}
+	
+	
+	
+	
+	//metodo encargado de cargar los datos a la tabla
+	private void cargarDataProducto(){
+		//PASO 1 : Limpiar la tabla
+		model.setRowCount(0);
+		//PASO 2 : Obtener el resultado
+		ArrayList<Producto> list = gProd.listarProductos();
+		//PASO 3 : bucle para el recorrido
+		for( Producto p : list) {
+			Object fila [] = {	p.getIdProducto(),
+								p.getDescripcion(),
+								p.getStock(),
+								p.getPrecio(),
+								p.getIdCategoria(),
+								p.getEstado()
+							};
+			//añadir fila a la tabla
+			model.addRow(fila);
+		}		
+	}
+	
+	
+	//Metodo cargar data al cbo
+	private void cargarDataCombobox() {
+		// 1. Obtener el resultado del proceso -- listar
+		ArrayList<TipoCategoria> list = gTip.listarTipoCategoria();
+		// 2. Validar el resultado del proceso
+		if(list.size() == 0) {
+			Alertas.mensajeError("Lista vacia");
+		} else {
+			cboTipo.addItem("Seleccione ...");
+			for(TipoCategoria tipCat : list) {
+				cboTipo.addItem(tipCat.getIdtipo() + " " + tipCat.getDescripcionTipo());
+			}
+		}
 	}
 }
 

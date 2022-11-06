@@ -170,7 +170,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 	}
 	
 	protected void actionPerformedMntmProductos(ActionEvent e) {
-		FrmRegProd prod =new FrmRegProd();
+		FrmRegProducto prod =new FrmRegProducto();
 		prod.setVisible(true);
 		escritorio.add(prod);
 	}
